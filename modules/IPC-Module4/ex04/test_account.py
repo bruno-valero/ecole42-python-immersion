@@ -1,7 +1,5 @@
 import pytest
-from operation import Operation
 from account import Account
-from utils import format_cents
 
 
 def test_account(capsys: pytest.CaptureFixture[str]) -> None:

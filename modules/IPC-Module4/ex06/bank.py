@@ -1,7 +1,5 @@
 from account import Account
 from utils import DuplicatedAccount, AccountNotFount, InvalidInput
-from typing import Callable
-
 
 class Bank:
     __accounts: list[Account]
@@ -13,7 +11,9 @@ class Bank:
         return len(self.__accounts)
 
     def __getitem__(self, acc_id: int) -> Account:
-        account_exists = lambda x: x.account_id == acc_id
+        def account_exists(acc: Account) -> bool:
+            return acc.account_id == acc_id
+
         exists: list[Account] = list(filter(account_exists, self.__accounts))
         if not len(exists):
             raise AccountNotFount()
@@ -21,18 +21,24 @@ class Bank:
 
     def __contains__(self, item: Account | int | str) -> bool:
         exists: list[Account] = []
-        account_exists: Callable[[Account], bool]
         if isinstance(item, Account):
-            account_exists = (
-                lambda acc: acc.account_id == item.account_id and acc.cpf == item.cpf
-            )
+
+            def account_exists(acc: Account) -> bool:
+                return acc.account_id == item.account_id and acc.cpf == item.cpf
+
             exists = list(filter(account_exists, self.__accounts))
         elif isinstance(item, str):
-            account_exists = lambda x: x.cpf == item
-            exists = list(filter(account_exists, self.__accounts))
+
+            def cpf_exists(acc: Account) -> bool:
+                return acc.cpf == item
+
+            exists = list(filter(cpf_exists, self.__accounts))
         elif isinstance(item, int):
-            account_exists = lambda x: x.account_id == item
-            exists = list(filter(account_exists, self.__accounts))
+
+            def id_exists(acc: Account) -> bool:
+                return acc.account_id == item
+
+            exists = list(filter(id_exists, self.__accounts))
         else:
             return False
         return len(exists) > 0
@@ -77,7 +83,7 @@ class Bank:
             or source_account == destination_account
         ):
             raise InvalidInput()
-        if not source_account in self or not destination_account in self:
+        if source_account not in self or destination_account not in self:
             raise AccountNotFount()
         source = list(
             filter(lambda x: x.account_id == source_account, self.__accounts)

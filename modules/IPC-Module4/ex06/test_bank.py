@@ -1,5 +1,4 @@
 import pytest
-from operation import Operation
 from account import Account
 from bank import Bank
 from utils import (
@@ -15,7 +14,7 @@ def test_bank(capsys: pytest.CaptureFixture[str]) -> None:
     bank.add_account(ac1)
     bank.add_account(ac2)
     assert len(bank) == 2
-    assert (123 in bank) == True
+    assert (123 in bank)
     assert bank[123].__repr__() == "Account(123, '123.456.789-01')"
     bank[123].deposit(10000, "Initial deposit")
     bank.transfer(123, 456, 5000, "Payment")

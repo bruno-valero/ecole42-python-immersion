@@ -14,9 +14,9 @@ def format_cents(cents: int) -> str:
 
 class InsufficientBalance(Exception):
     def __init__(self, message: str = ""):
-        super().__init__(f"Insuffcient Ballance!!" if not message else message)
+        super().__init__("Insuffcient Ballance!!" if not message else message)
 
 
 class OperationType(Enum):
-    CREDIT = 1
-    DEBIT = 2
+    CREDIT = 'credit'
+    DEBIT = 'debit'
